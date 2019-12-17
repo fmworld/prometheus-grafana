@@ -6,13 +6,15 @@
 
 ```docker
 docker pull grafana/grafana
-docker run -d -p 3000:3000 --name=grafana01 grafana/grafana:last
+docker run -d -p 3000:3000 --name=grafana01 grafana/grafana:latest
 ```
 
 - 配置dataSource
   - 集成prometheus插件
+    ![ 插件列表](./image/grafana_add_datasource.png)
+
   - 进入dataSource面板，选择prometheus数据源
-  - 编辑拉取数据源的URL
+  ![ 插件列表](./image/grafana_datasource_02.png)
 
 - 配置dashborad面板
   - 新建dashboard面板
@@ -37,3 +39,8 @@ docker run -d -p 3000:3000 --name=grafana01 grafana/grafana:last
     - 在dashboard的右上角，选择share选项
     - 在弹出的面板中，选择export选项，即可导出文件或者json串
   
+- 配置node exporter面板
+  - 导入node_exporter面板
+    ![node exporter](./image/grafana_node_exporter.png)
+  - 点击import，生成node exporter面板
+    ![node数据展示](./image/grafana_node_export_data_display.png)

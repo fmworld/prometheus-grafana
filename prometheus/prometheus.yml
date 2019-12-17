@@ -48,6 +48,6 @@ scrape_configs:
           group: 'canary'
   - job_name: 'node_exporter'
     static_configs:
-      - targets: ['172.17.0.3:9100']
+      - targets: ['172.17.0.8:9100']
         labels:
           group: 'system'

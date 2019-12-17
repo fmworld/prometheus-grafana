@@ -1,0 +1,13 @@
+groups:
+- name: example
+  rules:
+  - record: job_service_rpc_durations_seconds_count_avg_rate5m
+    expr: avg(rate(rpc_durations_seconds_count[5m])) by (job, service)
+- name: alerttest
+  rules:
+  - alert: rpc_duration_long
+    expr: rpc_durations_seconds{job="example-random", quantile="0.5"} > 0.0000006383756672736973
+    labels:
+      test: page2
+    annotations:
+      summary: Hi, world 007

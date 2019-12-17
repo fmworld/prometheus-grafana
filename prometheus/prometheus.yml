@@ -35,9 +35,13 @@ scrape_configs:
     scrape_interval: 5s
 
     static_configs:
-      - targets: ['172.17.0.5:8080']
+      - targets: ['172.17.0.8:8080']
         labels:
-          group: 'production'
+          group: 'count test'
+          
+      - targets: ['172.17.0.8:8088']
+        labels:
+          group: 'custom exporter'
 
       - targets: ['172.17.0.3:8082']
         labels:

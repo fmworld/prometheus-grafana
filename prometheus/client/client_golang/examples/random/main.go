@@ -48,6 +48,12 @@ var (
 		},
 		[]string{"service"},
 	)
+
+	rpcCounts = prometheus.NewCounter(
+		prometheus.CounterOpts{
+			Name:       "rpc_request_count",
+			Help:       "RPC count test.",
+		})
 	// The same as above, but now as a histogram, and only for the normal
 	// distribution. The buckets are targeted to the parameters of the
 	// normal distribution, with 20 buckets centered on the mean, each
@@ -63,6 +69,7 @@ func init() {
 	// Register the summary and the histogram with Prometheus's default registry.
 	prometheus.MustRegister(rpcDurations)
 	prometheus.MustRegister(rpcDurationsHistogram)
+	prometheus.MustRegister(rpcCounts)
 	// Add Go module build info.
 	prometheus.MustRegister(prometheus.NewBuildInfoCollector())
 }
@@ -91,6 +98,14 @@ func main() {
 			rpcDurations.WithLabelValues("normal").Observe(v)
 			rpcDurationsHistogram.Observe(v)
 			time.Sleep(time.Duration(75*oscillationFactor()) * time.Millisecond)
+		}
+	}()
+
+	go func() {
+		for {
+			// v := (rand.NormFloat64() * *normDomain) + *normMean
+			rpcCounts.Inc()
+			time.Sleep(time.Duration(10*1000 )* time.Millisecond)
 		}
 	}()
 

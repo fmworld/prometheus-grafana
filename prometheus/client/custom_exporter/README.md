@@ -6,13 +6,22 @@
 
   ```docker
   docker pull golang
-  docker run --name -v /tmp:/etc/golang -it pClient01 /bin/bash
+  docker run --name -v /tmp:/etc/golang -p 8080:8080 -it pClient01 /bin/bash
   ```
 
 - 编写[go程序](./main.go)
 - 运行go程序
-  - go build
-  - nohup ./custom_exporter &
+  - nohup go run main.go &
+- 配置[prometheus.yml](../../prometheus/prometheus.yml)抓取目标
+
+  ```yml
+    - targets: ['172.17.0.8:8088']
+            labels:
+            group: 'custom exporter'
+  ```
+- 查询示例：
+![prometheus输出结果](./image/prom_ql_custom_exporter.png)
+
 
 ## format
 

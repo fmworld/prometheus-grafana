@@ -23,7 +23,9 @@
   - Gauge
   - Histogram
   - Summary
+- [中文文档](https://songjiayang.gitbooks.io/prometheus/content/exporter/text.html)
 - 示例
+
   ``` ymal
   # HELP http_requests_total The total number of HTTP requests.
   # TYPE http_requests_total counter

@@ -18,7 +18,7 @@ Prometheus is an open-source systems monitoring and alerting toolkit originally 
 
   ``` docker
   docker pull quay.io/prometheus/prometheus
-  docker run -p 9090:9090 -v /tmp:/etc/prometheus --name prom prom/prometheus
+  docker run -d -p 9090:9090 -v /tmp:/etc/prometheus --name prom prom/prometheus
   ```
 
   - 本地tmp文件夹下提供 [prometheus.yml](./prometheus.yml) 文件
@@ -26,9 +26,10 @@ Prometheus is an open-source systems monitoring and alerting toolkit originally 
   - targets中的IP为被抓取对象所在的网络节点
 
 - 通过localhost:9090/graph来验证容器是否正常运行
-  - 验证示例：
+  - 验证示例：在QL查询框中执行一下命令
     - [prometheus_target_interval_length_seconds](https://prometheus.io/docs/prometheus/latest/getting_started/#using-the-expression-browser)
     - [rate(prometheus_tsdb_head_chunks_created_total[1m])](https://prometheus.io/docs/prometheus/latest/getting_started/#using-the-graphing-interface)
+    - ![示例](./image/prom_ql_exec.png)
 
 ## 基础架构
 
@@ -147,7 +148,7 @@ a push gateway for supporting short-lived jobs
     - target_label
     - regex
     - action
-    - 解释：对source_labels中的标签，通过regex匹配，对匹配上的标签执行action动作
+    - 解释：对source_labels中的标签，通过regex匹配，对匹配上的标签执行action动作; 如果为replace的action,通过target_label替换replacement
 
   - alertmanager_config
     - Alert manager是另外一个应用，需要配置相应的目标地址

@@ -17,11 +17,8 @@ Prometheus is an open-source systems monitoring and alerting toolkit originally 
 - docker安装
 
   ``` docker
-  docker run \
-    -p 9090:9090 \
-    -v /tmp:/etc/prometheus \
-    --name prom \
-    prom/prometheus
+  docker pull quay.io/prometheus/prometheus
+  docker run -p 9090:9090 -v /tmp:/etc/prometheus --name prom prom/prometheus
   ```
 
   - 本地tmp文件夹下提供 [prometheus.yml](./prometheus.yml) 文件

@@ -49,8 +49,8 @@ var (
 		[]string{"service"},
 	)
 
-	rpcCounts = prometheus.NewCounter(
-		prometheus.CounterOpts{
+	rpcCounts = prometheus.NewGauge(
+		prometheus.GaugeOpts{
 			Name:       "rpc_request_count",
 			Help:       "RPC count test.",
 		})
@@ -94,7 +94,8 @@ func main() {
 
 	go func() {
 		for {
-			v := (rand.NormFloat64() * *normDomain) + *normMean
+			// v := (rand.NormFloat64() * *normDomain) + *normMean
+			v := 100.0
 			rpcDurations.WithLabelValues("normal").Observe(v)
 			rpcDurationsHistogram.Observe(v)
 			time.Sleep(time.Duration(75*oscillationFactor()) * time.Millisecond)
@@ -104,7 +105,7 @@ func main() {
 	go func() {
 		for {
 			// v := (rand.NormFloat64() * *normDomain) + *normMean
-			rpcCounts.Inc()
+			rpcCounts.Set(100.0)
 			time.Sleep(time.Duration(10*1000 )* time.Millisecond)
 		}
 	}()

@@ -140,6 +140,19 @@ a push gateway for supporting short-lived jobs
     - Alerting rules
       - 报警规则，
       - 满足条件时，生成报警，pending, fire， 被 AlertManager进一步处理后展示
+      - 示例规则
+
+      ```yml
+        - alert: rpc_request_count
+          expr: rate(rpc_request_count[1m]) > 0.1
+          labels:
+            test: count alert
+          annotations:
+            summary: Hi, counter
+      ```
+
+      - 在prometheus的告警栏目会有相应的显示
+        ![告警列表](./image/prometheus_alert.png)
 
   - relabel_config
     - 对原有标签做新的事件处理

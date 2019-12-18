@@ -9,7 +9,7 @@ alerting:
   alertmanagers:
   - static_configs:
     - targets:
-      - 172.17.0.4:9093
+      - 172.17.0.2:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
@@ -35,7 +35,7 @@ scrape_configs:
     scrape_interval: 5s
 
     static_configs:
-      - targets: ['172.17.0.8:8080']
+      - targets: ['172.17.0.4:8080']
         labels:
           group: 'count test'
           

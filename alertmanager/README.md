@@ -5,14 +5,25 @@
 
     ```docker
         docker pull quay.io/prometheus/alertmanager
-        docker run --name -v /tmp:/etc/alertmanager alert01 prom/alertmanager
+        docker run -d -p 9093:9093 --name alert -v /tmp:/etc/alertmanager prom/alertmanager
     ```
+
+  - 本地浏览器输入localhost:9093验证是否安装成功
+    ![ui](./image/alert_ui.png)
 
   - 本地tmp文件夹中提供[alertmanager.yml](./alertmanager.yml)文件
 
   - prometheus对接alertmanager
     - 在[prometheus.yml](../prometheus/prometheus.yml)文件中配置Alertmanager configuration
-    - targets中的IP为AlertManager运行的网络节点
+    - targets中的IP为AlertManager运行的网络节点,9093为alertmanager默认端口
+
+    ```yml
+      alerting:
+        alertmanagers:
+        - static_configs:
+            - targets:
+            - 172.17.0.2:9093
+    ```
 
 - Concepts of the AlertManager
   - [doc of AlertManager](https://prometheus.io/docs/alerting/alertmanager/) , [github](https://github.com/prometheus/alertmanager/blob/master/README.md)
@@ -34,11 +45,11 @@
 
 - overview
   - alerting rule
-    - 告警规则在promethues.rules.yml中定义
+    - 告警规则在[prometheus.rules.yml](../prometheus/prometheus.rules.yml)中定义
     - 告警由prometheus生成，并推送给AlertManager
   - alerts to AlertManager
     - AlertManager接收prometheus推送过来的告警，进行相关的展示、去重、降噪、分组等
-
+    ![警告列表](./image/alertmanager_counter_alert.png)
 - create alert rule
   - prometheus configure file, point the rule file, and implements rule of alert in the rule file
 
@@ -46,13 +57,12 @@
     groups:
     - name: alerttest
         rules:
-        - alert: rpc_duration_long
-        expr: rpc_durations_seconds{job="example-random", quantile="0.5"} > 3.601946666364743e-05
-        for: 10m
-        labels:
-            test: page
-        annotations:
-            summary: Hi, world
+        - alert: rpc_request_count
+            expr: rate(rpc_request_count[1m]) > 0.1
+            labels:
+                test: count alert
+            annotations:
+            summary: Hi, counter
     ```
 
 - group of alert
@@ -65,6 +75,8 @@
 
 针对警告发送通知，通知可以通过邮件、短信、具备API接口的社交办公产品接收
 
+- 邮件接收的告警样例
+  ![样例](./image/alertmanager_notification.png)
 - route, 通知路由
   - config in alert manager
 
@@ -125,7 +137,7 @@
   - equal: target 和 source 必须同时具备的标签
 
 - email config
-  - config in alertmanager.yml
+  - config in [alertmanager.yml](./alertmanager.yml)
 
   ```yml
   smtp_smarthost: 'smtp.qq.com:465'
@@ -138,3 +150,14 @@
 
   - 配置邮件协议，此处为smtp_smarthost
   - 配置认证信息，smtp_auth_username、smtp_auth_password
+
+- receiver config
+  - config in [alertmanager.yml](./alertmanager.yml)
+  - 配置如下
+
+    ```yml
+    receivers:
+        - name: 'team-X-mails'
+        email_configs:
+         - to: 'xx.com'
+    ```

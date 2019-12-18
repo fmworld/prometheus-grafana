@@ -5,9 +5,9 @@ groups:
     expr: avg(rate(rpc_durations_seconds_count[5m])) by (job, service)
 - name: alerttest
   rules:
-  - alert: rpc_duration_long
-    expr: rpc_durations_seconds{job="example-random", quantile="0.5"} > 0.0000006383756672736973
+  - alert: rpc_request_count
+    expr: rate(rpc_request_count[1m]) > 0.1
     labels:
-      test: page2
+      test: count alert
     annotations:
-      summary: Hi, world 007
+      summary: Hi, counter

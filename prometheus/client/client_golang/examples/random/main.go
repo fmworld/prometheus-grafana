@@ -49,11 +49,16 @@ var (
 		[]string{"service"},
 	)
 
-	rpcCounts = prometheus.NewGauge(
-		prometheus.GaugeOpts{
+	rpcCounts = prometheus.NewCounter(
+		prometheus.CounterOpts{
 			Name:       "rpc_request_count",
 			Help:       "RPC count test.",
 		})
+	rpcGauge = prometheus.NewGauge(
+			prometheus.GaugeOpts{
+				Name:       "rpc_request_gauge",
+				Help:       "RPC count test.",
+			})
 	// The same as above, but now as a histogram, and only for the normal
 	// distribution. The buckets are targeted to the parameters of the
 	// normal distribution, with 20 buckets centered on the mean, each
@@ -70,6 +75,8 @@ func init() {
 	prometheus.MustRegister(rpcDurations)
 	prometheus.MustRegister(rpcDurationsHistogram)
 	prometheus.MustRegister(rpcCounts)
+	prometheus.MustRegister(rpcGauge)
+	
 	// Add Go module build info.
 	prometheus.MustRegister(prometheus.NewBuildInfoCollector())
 }
@@ -94,8 +101,7 @@ func main() {
 
 	go func() {
 		for {
-			// v := (rand.NormFloat64() * *normDomain) + *normMean
-			v := 100.0
+			v := (rand.NormFloat64() * *normDomain) + *normMean
 			rpcDurations.WithLabelValues("normal").Observe(v)
 			rpcDurationsHistogram.Observe(v)
 			time.Sleep(time.Duration(75*oscillationFactor()) * time.Millisecond)
@@ -105,7 +111,8 @@ func main() {
 	go func() {
 		for {
 			// v := (rand.NormFloat64() * *normDomain) + *normMean
-			rpcCounts.Set(100.0)
+			rpcCounts.Inc()
+			rpcGauge.Set(100.0)
 			time.Sleep(time.Duration(10*1000 )* time.Millisecond)
 		}
 	}()

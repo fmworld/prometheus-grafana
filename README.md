@@ -1,13 +1,10 @@
 # prometheus-grafana  
 
-## prometheus
+## [prometheus](./prometheus/README.md)
 
-## prometheus-client
+## [prometheus-client](./prometheus/client/README.md)
 
-- client demo
-- custom demo
-- node exporter
+## [alert manager](./alertmanager/README.md)
 
-## alert manager
+## [grafana](./grafana/README.md)
 
-## grafana
